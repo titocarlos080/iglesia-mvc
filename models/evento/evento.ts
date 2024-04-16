@@ -1,5 +1,9 @@
 class Evento {
-    constructor(id, nombre, fecha, descripcion) {
+   private id: Number;
+   private nombre: string;
+   private fecha: Date;
+   private descripcion: string;
+    constructor(id: Number, nombre: string, fecha: Date, descripcion: string) {
       this.id = id;
       this.nombre = nombre;
       this.fecha = fecha;
@@ -7,36 +11,36 @@ class Evento {
     }
   
     // Getters
-    get getId() {
+    public    getId():Number {
       return this.id;
     }
   
-    get getNombre() {
+    public   getNombre():string {
       return this.nombre;
     }
   
-    get getFecha() {
+    public    getFecha():Date {
       return this.fecha;
     }
   
-    get getDescripcion() {
+    public    getDescripcion():string {
       return this.descripcion;
     }
   
     // Setters
-    set setId(newId) {
+    public    setId(newId: Number) {
       this.id = newId;
     }
   
-    set setNombre(newNombre) {
+    public   setNombre(newNombre: string) {
       this.nombre = newNombre;
     }
   
-    set setFecha(newFecha) {
+    public   setFecha(newFecha: Date) {
       this.fecha = newFecha;
     }
   
-    set setDescripcion(newDescripcion) {
+    public   setDescripcion(newDescripcion: string) {
       this.descripcion = newDescripcion;
     }
   
@@ -46,5 +50,5 @@ class Evento {
     }
   }
   
-  module.exports = Evento;
+export default Evento;
   

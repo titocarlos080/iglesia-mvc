@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Cargo</title>
+   <link rel="stylesheet" href="/css/styles.css">
+   <style>
+      table {
+         border-collapse: collapse;
+      }
+
+      th,
+      td {
+         border: 1px solid #000;
+         padding: 8px;
+         text-align: left;
+      }
+
+      th {
+         background-color: #726c6c;
+      }
+
+      th,
+      td:hover {
+         background-color: #9d9595;
+         z-index: 1;
+
+      }
+
+      .form_cargo {
+         margin-bottom: 20px;
+      }
+
+      .form_cargo input[type="text"] {
+         width: 250px;
+         padding: 5px;
+         margin-right: 10px;
+      }
+
+      .form_cargo input[type="submit"] {
+         padding: 5px 15px;
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         cursor: pointer;
+      }
+
+     
+
+       
+   </style>
+</head>
+
+<%- include("../templates/nav/nav1.ejs") %>
+<body>
+   <h1>Editar Cargo</h1>
+   <div class="container">
+       <form action="/cargos/edit" method="post">
+           <!-- Campo oculto para enviar el ID del cargo -->
+           <input type="hidden" name="id" value="<%= cargo.id %>">
+           <div>
+               <label for="nombre">Nombre del Cargo:</label>
+               <input type="text" id="nombre" name="nombre" value="<%= cargo.nombre %>" required>
+           </div>
+           <div>
+               <!-- Botón para enviar el formulario -->
+               <button type="submit">Guardar Cambios</button>
+           </div>
+       </form>
+   </div>
+</body>
+
+<footer>
+   <%- include("../templates/foot/footer1.ejs") %>
+</footer>
+
+</html>

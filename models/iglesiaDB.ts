@@ -5,7 +5,7 @@ class ConectorDB {
     private static host: string = 'localhost';
     private static port: number = 3306;
     private static user: string = 'root';
-    private static password: string = 'tucontraseña';
+    private static password: string = '';
     private static database: string = 'iglesia';
 
     // Conexión se establece automáticamente cuando se importa el módulo

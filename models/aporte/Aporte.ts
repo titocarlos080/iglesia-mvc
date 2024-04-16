@@ -1,12 +1,12 @@
 
   class Aporte {
-   id: Number;
-   monto: Number;
-   fecha: Date;
-   personaId: Number;
-   eventoId: Number;
+   private id: number;
+   private monto: number;
+   private fecha: Date;
+   private personaId: number;
+   private eventoId: number;
 
-   constructor(id: any, monto: any, fecha: any, personaId: any, eventoId: any) {
+   constructor( id: number, monto: number, fecha: Date, personaId: number, eventoId: number    ) {
      this.id = id;
      this.monto = monto;
      this.fecha = fecha;
@@ -15,32 +15,52 @@
    }
  
    // Getters
-   get getId() {
+  public   getId():number {
      return this.id;
    }
  
-   get getMonto() {
+   public   getMonto():number {
      return this.monto;
    }
  
-   get getFecha() {
+   public   getFecha():Date {
      return this.fecha;
    }
  
-   get getPersonaId() {
+   public   getPersonaId():number {
      return this.personaId;
    }
  
-   get getEventoId() {
+   public   getEventoId():number {
      return this.eventoId;
+   } 
+   
+   public   setId(id:number) {
+     return this.id=id;
+   }
+ 
+   public   setMonto(monto:number)  {
+     return this.monto= monto;
+   }
+ 
+   public   serFecha(fecha:Date)  {
+     return this.fecha=fecha;
+   }
+ 
+   public   setPersonaId(personaId:number) {
+     return this.personaId=personaId;
+   }
+ 
+   public   setEventoId(eventoId:number)  {
+     return this.eventoId=eventoId;
    }
  
    
  
    // Método toString
-   toString() {
+   public toString():string {
      return `Aporte - ID: ${this.id}, Monto: ${this.monto}, Fecha: ${this.fecha}, ID Persona: ${this.personaId}, ID Evento: ${this.eventoId}`;
    }
  }
  
-  
+   export default Aporte;

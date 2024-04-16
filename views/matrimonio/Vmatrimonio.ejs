@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Matrimonios</title>
+   <link rel="stylesheet" href="/css/styles.css">
+   <style>
+      table {
+         border-collapse: collapse;
+      }
+
+      th,
+      td {
+         border: 1px solid #000;
+         padding: 8px;
+         text-align: left;
+      }
+
+      th {
+         background-color: #726c6c;
+      }
+
+      th,
+      td:hover {
+         background-color: #9d9595;
+         z-index: 1;
+      }
+
+      .form_matrimonio {
+         margin-bottom: 20px;
+      }
+
+      .form_matrimonio input[type="date"] {
+         padding: 5px;
+         margin-right: 10px;
+      }
+
+      .form_matrimonio input[type="submit"] {
+         padding: 5px 15px;
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         cursor: pointer;
+      }
+
+      .edit-btn,
+      .delete-btn {
+         padding: 2px 5px;
+         margin-right: 5px;
+         text-decoration: none;
+         color: #333;
+         border: 1px solid #333;
+         border-radius: 3px;
+      }
+
+      .edit-btn:hover,
+      .delete-btn:hover {
+         background-color: #333;
+         color: white;
+      }
+
+      /* Estilos del modal */
+      .modal {
+         position: fixed;
+         z-index: 1;
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%;
+         overflow: auto;
+         background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      .modal-content {
+         background-color: #fefefe;
+         margin: 15% auto;
+         padding: 20px;
+         border: 1px solid #888;
+         width: 50%;
+         max-width: 500px;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+         position: relative;
+      }
+
+      .close {
+         color: #aaa;
+         float: right;
+         font-size: 28px;
+         font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+         color: black;
+         text-decoration: none;
+         cursor: pointer;
+      }
+
+      .modal-content form {
+         display: grid;
+         gap: 10px;
+      }
+
+      .modal-content label {
+         font-weight: bold;
+      }
+
+      .modal-content input[type="date"] {
+         width: 100%;
+         padding: 10px;
+      }
+
+      .modal-content button {
+         padding: 10px 20px;
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         cursor: pointer;
+      }
+
+      .modal-content button:hover {
+         background-color: #45a049;
+      }
+   </style>
+</head>
+
+<%- include("../templates/nav/nav1.ejs") %>
+
+<body>
+   <h1>Matrimonios</h1>
+   <div class="container-matrimonio">
+      <div class="form_matrimonio">
+         <h2>Agregar Nuevo Matrimonio</h2>
+         <form action="/matrimonios/add" method="post">
+            <div>
+               <label for="fecha">Fecha de Matrimonio:</label>
+               <input type="date" id="fecha" name="fecha" required>
+            </div>
+            <div>
+               <label for="idEsposo">Esposo:</label>
+               <select id="idEsposo" name="idEsposo" required>
+                  <% varones.forEach(esposo => { %>
+                  <option value="<%= esposo.id %>"><%= esposo.nombre %></option>
+                  <% }); %>
+               </select>
+            </div>
+            <div>
+               <label for="idEsposa">Esposa:</label>
+               <select id="idEsposa" name="idEsposa" required>
+                  <% mujeres.forEach(esposa => { %>
+                  <option value="<%= esposa.id %>"><%= esposa.nombre %></option>
+                  <% }); %>
+               </select>
+            </div>
+            <div>
+               <input type="submit" value="Agregar">
+            </div>
+         </form>
+         
+      </div>
+
+      <h2>Listado de Matrimonios</h2>
+      <table>
+         <tr>
+            <th>Matrimonio ID</th>
+            <th>Fecha de Matrimonio</th>
+             
+            <th>Nombre del Esposo</th>
+         
+            <th>Nombre de la Esposa</th>
+            <th>Acciones</th>
+         </tr>
+         <% matrimonios.forEach(matrimonio=> { %>
+         <tr>
+            <td><%= matrimonio.matrimonio_id %></td>
+            <td><%= matrimonio.fecha_matrimonio %></td>
+             <td><%= matrimonio.nombre_esposo %></td>
+             <td><%= matrimonio.nombre_esposa %></td>
+            <td>
+               <button class="edit-btn" style="cursor: pointer;"
+                  onclick="abrirFormEditar('<%= matrimonio.matrimonio_id %>', '<%= matrimonio.fecha_matrimonio %>', '<%= matrimonio.esposo_id %>', '<%= matrimonio.esposa_id %>')">Editar</button>
+               <!-- Enlace para eliminar -->
+               <a class="delete-btn" href="/matrimonios/delete/<%= matrimonio.matrimonio_id %>">Eliminar</a>
+            </td>
+         </tr>
+         <% }); %>
+      </table>
+   </div>
+
+   <!-- Modal para editar matrimonio -->
+   <div id="modalEditarMatrimonio" class="modal" style="display: none;">
+      <div class="modal-content">
+         <span class="close" onclick="cerrarFormEditar()">&times;</span>
+         <h2>Editar Matrimonio</h2>
+         <div id="formEditarMatrimonio" >
+            <input type="hidden" id="editMatrimonioId" name="id">
+            <div style="padding: 5px;">
+               <label for="editMatrimonioFecha">Fecha de Matrimonio:</label>
+               <input type="date" id="editMatrimonioFecha" name="fecha">
+            </div>
+            <div style="display: flex; flex-direction:row; justify-content: space-between; padding: 5px; ">
+               <div>
+                  <label for="editMatrimonioEsposo">Esposo:</label>
+                  <select id="editMatrimonioEsposo" name="idEsposo">
+                     <% varones.forEach(esposo => { %>
+                     <option value="<%= esposo.id %>"><%= esposo.nombre %></option>
+                     <% }); %>
+                  </select>
+               </div>
+               <div>
+                  <label for="editMatrimonioEsposa">Esposa:</label>
+                  <select id="editMatrimonioEsposa" name="idEsposa">
+                     <% mujeres.forEach(esposa => { %>
+                     <option value="<%= esposa.id %>"><%= esposa.nombre %></option>
+                     <% }); %>
+                  </select>
+               </div>
+            </div>
+            
+            <div>
+               <button onclick="guardarCambiosMatrimonio()">Guardar Cambios</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   
+
+   <script>
+      const modalMatrimonio = document.getElementById("modalEditarMatrimonio");
+      const formMatrimonio = document.getElementById("formEditarMatrimonio");
+      let matrimonioIdInput = document.getElementById("editMatrimonioId");
+      let matrimonioFechaInput = document.getElementById("editMatrimonioFecha");
+      let matrimonioEsposoInput = document.getElementById("editMatrimonioEsposo");
+      let matrimonioEsposaInput = document.getElementById("editMatrimonioEsposa");
+
+      let idMatrimonioAnterior = 0;
+      let fechaMatrimonioAnterior = '';
+      let idEsposoAnterior = 0;
+      let idEsposaAnterior = 0;
+
+      function abrirFormEditar(id, fecha, idEsposo, idEsposa) {
+         idMatrimonioAnterior = id;
+         fechaMatrimonioAnterior = fecha;
+         idEsposoAnterior = idEsposo;
+         idEsposaAnterior = idEsposa;
+
+         matrimonioIdInput.value = id;
+         matrimonioFechaInput.value = fecha;
+         matrimonioEsposoInput.value = idEsposo;
+         matrimonioEsposaInput.value = idEsposa;
+
+         modalMatrimonio.style.display = "block";
+      }
+
+      function cerrarFormEditar() {
+         modalMatrimonio.style.display = "none";
+      }
+
+      function guardarCambiosMatrimonio() {
+         const id = matrimonioIdInput.value || idMatrimonioAnterior;
+         const fecha = matrimonioFechaInput.value || fechaMatrimonioAnterior;
+         const idEsposo = matrimonioEsposoInput.value || idEsposoAnterior;
+         const idEsposa = matrimonioEsposaInput.value || idEsposaAnterior;
+
+         const formData = {
+            id: id,
+            fecha: fecha,
+            idEsposo: idEsposo,
+            idEsposa: idEsposa
+         };
+
+         fetch("/matrimonios/update", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+         })
+            .then(response => {
+               if (response.ok) {
+                  cerrarFormEditar();
+                  window.location.reload();
+               } else {
+                  console.error("Error al editar el matrimonio:", response.status);
+               }
+            })
+            .catch(error => {
+               console.error("Error al editar el matrimonio:", error);
+            });
+      }
+
+   </script>
+</body>
+<footer>
+   <%- include("../templates/foot/footer1.ejs") %>
+</footer>
+
+</html>

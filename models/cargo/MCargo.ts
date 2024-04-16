@@ -1,13 +1,13 @@
 import ConectorDB from "../iglesiaDB";
-
-  
+import Cargo from "./Cargo";
+import {   ResultSetHeader, RowDataPacket } from 'mysql2';
 class MCargo {
   // Método para crear un nuevo cargo
-   static async crearCargo(nuevoCargo) {
-   const connection = ConectorDB.getConexion();
-    const query = 'INSERT INTO Cargo (id, nombre) VALUES (?, ?)';
+  public async crearCargo(nuevoCargo: Cargo) {
+    const connection = ConectorDB.getConexion();
+    const query = 'INSERT INTO Cargo ( nombre) VALUES ( ?)';
     try {
-      await connection.execute(query, [nuevoCargo.id, nuevoCargo.nombre]);
+      await connection.promise().query(query, [nuevoCargo.getNombre()]);
       console.log('Cargo creado exitosamente.');
     } catch (error) {
       console.error('Error al crear el cargo:', error);
@@ -15,64 +15,94 @@ class MCargo {
   }
 
   // Método para obtener todos los cargos
-  static async obtenerCargos() {
+  public async obtenerCargos() {
     const connection = ConectorDB.getConexion();
-
     const query = 'SELECT * FROM Cargo';
     try {
-      const result = await connection.execute(query);
-      const cargos = result[0];
-      return cargos.map(cargo => new Cargo(cargo.id, cargo.nombre));
+      // Usar con.promise().query() para obtener una promesa
+      const [rows, fields] = await connection.promise().query(query);
+
+
+      return rows; // Devolver los resultados de la consulta
     } catch (error) {
       console.error('Error al obtener los cargos:', error);
-      return [];
+      return []; // Devolver un array vacío en caso de error
     }
   }
 
   // Método para obtener un cargo por su ID
-  static async obtenerCargoPorId(id) {
-    const connection = ConectorDB.getConexion();
 
-    const query = 'SELECT * FROM Cargo WHERE id = ?';
+  public async obtenerCargoPorId(id: number) {
+    const connection = ConectorDB.getConexion();
+    const query = 'SELECT * FROM Cargo WHERE id = ?'; // Consulta con cláusula WHERE
     try {
-      const result = await connection.execute(query, [id]);
-      const cargo = result[0][0];
-      if (!cargo) {
-        console.log('No se encontró ningún cargo con ese ID.');
+      const cargo: Cargo = new Cargo();
+      // Ejecutar la consulta con el ID como parámetro
+      const [rows]: [RowDataPacket[], unknown] = await connection.promise().query(query, [id]);
+
+      if (rows.length === 0) {
+        console.log(`No se encontró ningún cargo con ID ${id}`);
         return null;
       }
-      return new Cargo(cargo.id, cargo.nombre);
-    } catch (error) {
-      console.error('Error al obtener el cargo:', error);
-      return null;
-    }
-  }
+      const primerResultado = rows.shift(); // Obtener el primer resultado
+      if (primerResultado) {
+        cargo.setId(primerResultado.id);
+        cargo.setNombre(primerResultado.nombre);
+        // Otros campos que quieras asignar al objeto Cargo
+      }
+      console.log(cargo);
 
-  // Método para actualizar un cargo
-  static async actualizarCargo(id, nombre) {
-    const connection = ConectorDB.getConexion();
-
-    const query = 'UPDATE Cargo SET nombre = ? WHERE id = ?';
-    try {
-      await connection.execute(query, [nombre, id]);
-      console.log('Cargo actualizado exitosamente.');
+      return cargo;
     } catch (error) {
-      console.error('Error al actualizar el cargo:', error);
+      console.error('Error al obtener el cargo por ID:', error);
+      return null; // Devolver null en caso de error
     }
   }
 
   // Método para eliminar un cargo por su ID
-  static async eliminarCargo(id) {
+  public async eliminarCargoPorId(id: number) {
     const connection = ConectorDB.getConexion();
+    const query = 'DELETE FROM Cargo WHERE id = ?'; // Consulta con cláusula WHERE
 
-    const query = 'DELETE FROM Cargo WHERE id = ?';
     try {
-      await connection.execute(query, [id]);
-      console.log('Cargo eliminado exitosamente.');
+      // Ejecutar la consulta con el ID como parámetro
+      const [rows, _] = await connection.promise().query(query, [id]);
+      console.log('Cargo eliminado ID:' + rows);
+      // Devolver el objeto Cargo encontrado
     } catch (error) {
-      console.error('Error al eliminar el cargo:', error);
+      console.error('Error al obtener el cargo por ID:', error);
+      return null; // Devolver null en caso de error
     }
   }
+
+
+  // Método para actualizar un cargo
+  public async actualizarCargo(id: Number, nombre: string) {
+    const connection = ConectorDB.getConexion();
+    const query = 'UPDATE Cargo SET nombre = ? WHERE id = ?';
+    try {
+      console.log(query);
+      const [result] = await connection.promise().query(query, [nombre, id]);
+  
+      if ((result as ResultSetHeader).affectedRows > 0) {
+        console.log('Cargo actualizado exitosamente.');
+        return true; // La actualización fue exitosa
+      } else {
+        console.log(id);
+        
+         console.log((result as ResultSetHeader).info);
+         
+        console.log('El cargo con ID ' + id + ' no fue encontrado.');
+        return false; // No se encontró el cargo con el ID dado
+      }
+    } catch (error) {
+      console.error('Error al actualizar el cargo:', error);
+      return false; // Error al ejecutar la consulta
+    }
+  }
+  
+  
+
 }
 
- 
+export default MCargo;

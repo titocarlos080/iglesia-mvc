@@ -1,74 +1,39 @@
-class Programacion {
 
-  id :Number
-alabanzaPersona:String
-lecturaBiblicaPersona:String
-predicaPersona:String
-tribunaLibre:String
-eventoId = Number
-    constructor(id, alabanzaPersona, lecturaBiblicaPersona, predicaPersona, tribunaLibre, eventoId) {
-      this.id = id;
-      this.alabanzaPersona = alabanzaPersona;
-      this.lecturaBiblicaPersona = lecturaBiblicaPersona;
-      this.predicaPersona = predicaPersona;
-      this.tribunaLibre = tribunaLibre;
-      this.eventoId = eventoId;
-    }
-  
-    // Getters
-    get getId() {
-      return this.id;
-    }
-  
-    get getAlabanzaPersona() {
-      return this.alabanzaPersona;
-    }
-  
-    get getLecturaBiblicaPersona() {
-      return this.lecturaBiblicaPersona;
-    }
-  
-    get getPredicaPersona() {
-      return this.predicaPersona;
-    }
-  
-    get getTribunaLibre() {
-      return this.tribunaLibre;
-    }
-  
-    get getEventoId() {
-      return this.eventoId;
-    }
-  
-    // Setters
-    set setId(newId) {
-      this.id = newId;
-    }
-  
-    set setAlabanzaPersona(newAlabanzaPersona) {
-      this.alabanzaPersona = newAlabanzaPersona;
-    }
-  
-    set setLecturaBiblicaPersona(newLecturaBiblicaPersona) {
-      this.lecturaBiblicaPersona = newLecturaBiblicaPersona;
-    }
-  
-    set setPredicaPersona(newPredicaPersona) {
-      this.predicaPersona = newPredicaPersona;
-    }
-  
-    set setTribunaLibre(newTribunaLibre) {
-      this.tribunaLibre = newTribunaLibre;
-    }
-  
-    set setEventoId(newEventoId) {
-      this.eventoId = newEventoId;
-    }
-  
-    // Método toString
-    toString() {
-      return `Programacion - ID: ${this.id}, Alabanza Persona: ${this.alabanzaPersona}, Lectura Biblica Persona: ${this.lecturaBiblicaPersona}, Predica Persona: ${this.predicaPersona}, Tribuna Libre: ${this.tribunaLibre}, ID Evento: ${this.eventoId}`;
-    }
+class Programacion {
+  private id_evento: number;
+  private id_persona: number;
+  private id_tarea: number;
+ 
+  constructor(id_evento: number, id_persona: number, tarea: number ) {
+    this.id_evento = id_evento;
+    this.id_persona = id_persona;
+    this.id_tarea = tarea;
   }
-  
-   
+
+  // Getters
+  public getIdEvento(): number {
+    return this.id_evento;
+  }
+
+  public getIDPersona(): number {
+    return this.id_persona;
+  }
+
+  public getIDTarea(): number {
+    return this.id_tarea;
+  }
+
+  // Setters
+  public setIDPersona(id_persona: number): void {
+    this.id_persona = id_persona;
+  }
+  public setIdEvento(id_evento: number): void {
+    this.id_evento = id_evento;
+  }
+
+  public setIDTarea(tarea: number): void {
+    this.id_tarea = tarea;
+  }
+}
+
+export default Programacion;

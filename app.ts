@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import path from 'path'; // Importa el módulo 'path' para manejar rutas de archivos
 
-import HomeController from './controller/HomeController';
+ import routes from './routes';
 
 class App {
   public app: Express;
@@ -32,7 +32,7 @@ class App {
   }
 
   private routes(): void {
-    this.app.get('/', HomeController.index );
+    this.app.use('/',  routes );
   }
 
   public start(): void {

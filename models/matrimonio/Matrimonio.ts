@@ -1,9 +1,9 @@
 class Matrimonio {
-  id:Number
-  fecha:Date
-  idEsposo: Number
-  idEsposa:Number
-    constructor(id, fecha, idEsposo, idEsposa) {
+  private id:Number
+  private fecha:Date
+  private idEsposo: Number
+  private idEsposa:Number
+    constructor(id: Number, fecha: Date, idEsposo: Number, idEsposa: Number) {
       this.id = id;
       this.fecha = fecha;
       this.idEsposo = idEsposo;
@@ -11,36 +11,36 @@ class Matrimonio {
     }
   
     // Getters
-    get getId() {
+   public   getId():Number {
       return this.id;
     }
   
-    get getFecha() {
+    public   getFecha():Date {
       return this.fecha;
     }
   
-    get getIdEsposo() {
+    public   getIdEsposo():Number {
       return this.idEsposo;
     }
   
-    get getIdEsposa() {
+    public   getIdEsposa():Number {
       return this.idEsposa;
     }
   
     // Setters
-    set setId(newId) {
+    public   setId(newId: Number ) {
       this.id = newId;
     }
   
-    set setFecha(newFecha) {
+    public    setFecha(newFecha: Date ) {
       this.fecha = newFecha;
     }
   
-    set setIdEsposo(newIdEsposo) {
+    public   setIdEsposo(newIdEsposo: Number ) {
       this.idEsposo = newIdEsposo;
     }
   
-    set setIdEsposa(newIdEsposa) {
+    public   setIdEsposa(newIdEsposa: Number ) {
       this.idEsposa = newIdEsposa;
     }
   
@@ -50,4 +50,4 @@ class Matrimonio {
     }
   }
   
-   
+   export default Matrimonio;

@@ -1,92 +1,90 @@
 import ConectorDB from "../iglesiaDB";
+import Aporte from "./Aporte";
 
- 
+
 class MAporte {
 
- 
-
-  static async crearAporte(nuevoAporte: any) {
+  public async crearAporte(nuevoAporte: Aporte) {
     try {
-      const connection =  ConectorDB.getConexion();
-      if (!connection) {
-        console.error('No se pudo obtener la conexión a la base de datos.');
-        return;
-      }
+      const connection = ConectorDB.getConexion();
 
-      const query = 'INSERT INTO Aporte (monto, fecha, persona_id, evento_id) VALUES (?, ?, ?, ?)';
-      await connection.execute(query, [nuevoAporte.monto, nuevoAporte.fecha, nuevoAporte.personaId, nuevoAporte.eventoId]);
-      console.log('Aporte creado exitosamente.');
+      const query = 'INSERT INTO Aporte (monto, fecha, id_persona, id_evento) VALUES (?, ?, ?, ?)';
+      await connection.promise().query(query, [nuevoAporte.getMonto(), nuevoAporte.getFecha(), nuevoAporte.getPersonaId(), nuevoAporte.getEventoId()]);
+      console.log('Aporte creado exitosamente.' + nuevoAporte.toString());
     } catch (error) {
       console.error('Error al crear el aporte:', error);
     }
   }
 
-  static async obtenerAportes() {
+  public async obtenerAportes() {
     try {
-      const connection =  ConectorDB.getConexion();
-      if (!connection) {
-        console.error('No se pudo obtener la conexión a la base de datos.');
-        return [];
-      }
+      const connection = ConectorDB.getConexion(); // Obtener la conexión a la base de datos
+      const query = 'SELECT * FROM Aporte ';
+      const resultados = await connection.promise().query(query);
 
-      const query = 'SELECT * FROM Aporte';
-      const [rows] = await connection.execute(query);
-      const aportes = rows.map((aporte: any) => new Aporte(aporte.id, aporte.monto, aporte.fecha, aporte.persona_id, aporte.evento_id));
-      return aportes;
+      return resultados;
     } catch (error) {
       console.error('Error al obtener los aportes:', error);
+    }
+  }
+  public async obtenerAportesDetallado() {
+    try {
+      const connection = ConectorDB.getConexion();
+      const query = `
+            SELECT
+                a.id AS id_aporte,
+                a.monto,
+                a.fecha,
+                p.id AS id_persona,
+                p.nombre AS nombre_persona,
+                e.id AS id_evento,
+                e.nombre AS nombre_evento,
+                e.fecha AS fecha_evento,
+                e.descripcion AS descripcion_evento
+            FROM Aporte a
+            INNER JOIN Persona p ON a.id_persona = p.id
+            INNER JOIN Evento e ON a.id_evento = e.id
+        `;
+      const [resultados] = await connection.promise().query(query);
+
+      return resultados;
+    } catch (error) {
+      console.error('Error al obtener los aportes detallados:', error);
       return [];
     }
   }
 
-  static async obtenerAportePorId(id: number) {
-    try {
-      const connection =  ConectorDB.getConexion();
-      if (!connection) {
-        console.error('No se pudo obtener la conexión a la base de datos.');
-        return null;
-      }
 
-      const query = 'SELECT * FROM Aporte WHERE id = ?';
-      const [rows] = await connection.execute(query, [id]);
-      const aporte = rows[0];
-      if (!aporte) {
-        console.log('No se encontró ningún aporte con ese ID.');
-        return null;
-      }
-      return new Aporte(aporte.id, aporte.monto, aporte.fecha, aporte.persona_id, aporte.evento_id);
+
+
+
+  public async obtenerAportePorId(id: number) {
+    try {
+      const connection = ConectorDB.getConexion(); // Obtener la conexión a la base de datos
+      const query = 'SELECT * FROM Aporte WHERE id=?';
+      const resultados = await connection.promise().query(query, [id]);
+      return resultados;
     } catch (error) {
-      console.error('Error al obtener el aporte:', error);
-      return null;
+      console.error('Error al obtener los aportes:', error);
     }
   }
 
-  static async actualizarAporte(id: number, monto: number, fecha: string, personaId: number, eventoId: number) {
+  public async actualizarAporte(aporte: Aporte) {
     try {
       const connection = ConectorDB.getConexion();
-      if (!connection) {
-        console.error('No se pudo obtener la conexión a la base de datos.');
-        return;
-      }
-
-      const query = 'UPDATE Aporte SET monto = ?, fecha = ?, persona_id = ?, evento_id = ? WHERE id = ?';
-      await connection.execute(query, [monto, fecha, personaId, eventoId, id]);
+      const query = 'UPDATE Aporte SET monto = ?, fecha = ?, id_persona = ?, id_evento = ? WHERE id = ?';
+      await connection.promise().query(query, [aporte.getMonto(), aporte.getFecha(), aporte.getPersonaId(), aporte.getEventoId(), aporte.getId()]);
       console.log('Aporte actualizado exitosamente.');
     } catch (error) {
       console.error('Error al actualizar el aporte:', error);
     }
   }
 
-  static async eliminarAporte(id: number) {
+  public async eliminarAporte(id: number) {
     try {
       const connection = ConectorDB.getConexion();
-      if (!connection) {
-        console.error('No se pudo obtener la conexión a la base de datos.');
-        return;
-      }
-
       const query = 'DELETE FROM Aporte WHERE id = ?';
-      await connection.execute(query, [id]);
+      await connection.promise().query(query, [id]);
       console.log('Aporte eliminado exitosamente.');
     } catch (error) {
       console.error('Error al eliminar el aporte:', error);
