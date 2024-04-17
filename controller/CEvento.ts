@@ -1,8 +1,19 @@
 import { Request, Response } from 'express';
 import MEvento from '../models/evento/Mevento';
 import Evento from '../models/evento/evento';
-
+ 
 class CEvento {
+
+  static async index(req: Request, res: Response) {
+    try {
+      const mEvento: MEvento = new MEvento();
+      const eventos = await mEvento.obtenerEventos();
+      res.render('evento/Vevento', { eventos: eventos });
+    } catch (error) {
+      console.error('Error al obtener los eventos:', error);
+      res.status(500).send('Error interno del servidor');
+    }
+  }
 
   static async update(req: Request, res: Response) {
     try {
@@ -13,17 +24,6 @@ class CEvento {
       return res.status(200).send("ok");
     } catch (error) {
       console.error('Error al actualizar el evento:', error);
-      res.status(500).send('Error interno del servidor');
-    }
-  }
-
-  static async index(req: Request, res: Response) {
-    try {
-      const mEvento: MEvento = new MEvento();
-      const eventos = await mEvento.obtenerEventos();
-      res.render('evento/Vevento', { eventos: eventos });
-    } catch (error) {
-      console.error('Error al obtener los eventos:', error);
       res.status(500).send('Error interno del servidor');
     }
   }

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import MCargo from '../models/cargo/MCargo';
 import Cargo from '../models/cargo/Cargo';
-
+ 
 
 class CCargo {
     
@@ -22,9 +22,7 @@ class CCargo {
         
         
     }
-
-    
-
+ 
 
     static async index(req: Request, res: Response) {
         try {

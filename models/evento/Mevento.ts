@@ -19,7 +19,7 @@ class MEvento {
             console.error('Error al crear el Evento:', error);
             throw error; // Lanzar el error para manejarlo en el controlador
         }
-    }
+    } 
 
     // Método para obtener todos los Eventos
     public async obtenerEventos() {

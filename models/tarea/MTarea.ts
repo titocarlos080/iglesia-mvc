@@ -29,7 +29,7 @@ class MTarea {
       return []; // Devolver un array vacío en caso de error
     }
   }
-
+ 
   // Método para obtener un Tarea por su ID
 
   public async obtenerTareaPorId(id: number) {

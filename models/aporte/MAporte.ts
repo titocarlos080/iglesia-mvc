@@ -53,11 +53,7 @@ class MAporte {
       return [];
     }
   }
-
-
-
-
-
+ 
   public async obtenerAportePorId(id: number) {
     try {
       const connection = ConectorDB.getConexion(); // Obtener la conexión a la base de datos

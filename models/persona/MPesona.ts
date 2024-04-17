@@ -2,7 +2,7 @@ import ConectorDB from "../iglesiaDB";
 import Persona from "./Persona";
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 class MPersona {
-    async obtenerPersonasVarones() {
+    public async obtenerPersonasVarones() {
         const connection = ConectorDB.getConexion();
         const query = 'SELECT * FROM Persona WHERE sexo="M"';
         try {
@@ -16,7 +16,7 @@ class MPersona {
             return []; // Devolver un array vacío en caso de error
         }
     }
-    async obtenerPersonasMujeres() {
+    public async obtenerPersonasMujeres() {
         const connection = ConectorDB.getConexion();
         const query = 'SELECT * FROM Persona WHERE sexo="F"';
         try {

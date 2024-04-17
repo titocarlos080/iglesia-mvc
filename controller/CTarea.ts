@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import MTarea from "../models/tarea/MTarea";
 import Tarea from "../models/tarea/Tarea";
 
-class CTarea {
+class CTarea { 
   
     static async eliminar(req: Request, res: Response) {
         try {

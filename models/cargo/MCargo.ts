@@ -12,7 +12,7 @@ class MCargo {
     } catch (error) {
       console.error('Error al crear el cargo:', error);
     }
-  }
+  } 
 
   // Método para obtener todos los cargos
   public async obtenerCargos() {
